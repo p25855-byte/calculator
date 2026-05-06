@@ -3,79 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Multi Calculator</title>
+  <title>Calculator</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="calculator">
+    <div id="display">0</div>
+    <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="toggleSign()">+/-</button>
+      <button onclick="inputPercent()">%</button>
+      <button class="op" onclick="setOp('/')">÷</button>
 
-  <div class="app">
-    <h1>Multi Calculator</h1>
+      <button onclick="inputNum('7')">7</button>
+      <button onclick="inputNum('8')">8</button>
+      <button onclick="inputNum('9')">9</button>
+      <button class="op" onclick="setOp('*')">×</button>
 
-    <!-- Tab Buttons -->
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('calc')">🔢 Calculator</button>
-      <button class="tab" onclick="switchTab('age')">🎂 Age Calculator</button>
-    </div>
+      <button onclick="inputNum('4')">4</button>
+      <button onclick="inputNum('5')">5</button>
+      <button onclick="inputNum('6')">6</button>
+      <button class="op" onclick="setOp('-')">−</button>
 
-    <!-- Standard Calculator -->
-    <div id="calc" class="section">
-      <div id="display">0</div>
-      <div class="buttons">
-        <button onclick="clearDisplay()">C</button>
-        <button onclick="toggleSign()">+/-</button>
-        <button onclick="inputPercent()">%</button>
-        <button class="op" onclick="setOp('/')">÷</button>
+      <button onclick="inputNum('1')">1</button>
+      <button onclick="inputNum('2')">2</button>
+      <button onclick="inputNum('3')">3</button>
+      <button class="op" onclick="setOp('+')">+</button>
 
-        <button onclick="inputNum('7')">7</button>
-        <button onclick="inputNum('8')">8</button>
-        <button onclick="inputNum('9')">9</button>
-        <button class="op" onclick="setOp('*')">×</button>
-
-        <button onclick="inputNum('4')">4</button>
-        <button onclick="inputNum('5')">5</button>
-        <button onclick="inputNum('6')">6</button>
-        <button class="op" onclick="setOp('-')">−</button>
-
-        <button onclick="inputNum('1')">1</button>
-        <button onclick="inputNum('2')">2</button>
-        <button onclick="inputNum('3')">3</button>
-        <button class="op" onclick="setOp('+')">+</button>
-
-        <button class="zero" onclick="inputNum('0')">0</button>
-        <button onclick="inputDot()">.</button>
-        <button class="op" onclick="calculate()">=</button>
-      </div>
-    </div>
-
-    <!-- Age Calculator -->
-    <div id="age" class="section hidden">
-      <div class="age-form">
-        <label>Date of Birth</label>
-        <input type="date" id="dob" />
-
-        <label>Age At Date <span>(leave blank for today)</span></label>
-        <input type="date" id="ageAt" />
-
-        <button class="calc-btn" onclick="calcAge()">Calculate Age</button>
-      </div>
-
-      <div id="age-result" class="age-result hidden">
-        <div class="main-age" id="mainAge"></div>
-        <div class="age-grid">
-          <div class="age-card"><p>Months</p><h3 id="totMonths"></h3></div>
-          <div class="age-card"><p>Weeks</p><h3 id="totWeeks"></h3></div>
-          <div class="age-card"><p>Days</p><h3 id="totDays"></h3></div>
-          <div class="age-card"><p>Hours</p><h3 id="totHours"></h3></div>
-        </div>
-        <div class="next-bday">
-          🎂 Next Birthday: <strong id="nextBday"></strong>
-          <span id="daysLeft"></span>
-        </div>
-      </div>
-      <p id="age-error" class="error hidden"></p>
+      <button class="zero" onclick="inputNum('0')">0</button>
+      <button onclick="inputDot()">.</button>
+      <button class="op" onclick="calculate()">=</button>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
