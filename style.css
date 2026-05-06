@@ -1,16 +1,114 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { display: flex; justify-content: center; align-items: center;
-       min-height: 100vh; background: #1a1a2e; font-family: sans-serif; }
-.calculator { background: #16213e; border-radius: 16px; padding: 20px;
-              box-shadow: 0 20px 60px rgba(0,0,0,0.5); width: 280px; }
-#display { background: #0f3460; color: #fff; font-size: 2rem;
-           text-align: right; padding: 20px; border-radius: 10px;
-           margin-bottom: 16px; min-height: 70px; word-break: break-all; }
-.buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-button { padding: 18px; border: none; border-radius: 10px; font-size: 1.1rem;
-         cursor: pointer; background: #1a1a2e; color: #e0e0e0;
-         transition: background 0.2s; }
-button:hover { background: #533483; }
-.op { background: #e94560; color: #fff; }
-.op:hover { background: #c73652; }
-.zero { grid-column: span 2; text-align: left; padding-left: 24px; }
+// ── Tab Switching ──────────────────────────
+function switchTab(tab) {
+  document.getElementById('calc').classList.toggle('hidden', tab !== 'calc');
+  document.getElementById('age').classList.toggle('hidden', tab !== 'age');
+  document.querySelectorAll('.tab').forEach((btn, i) => {
+    btn.classList.toggle('active', (i === 0 && tab === 'calc') || (i === 1 && tab === 'age'));
+  });
+}
+
+// ── Standard Calculator ────────────────────
+let current = '0', previous = null, operator = null, fresh = false;
+
+const updateDisplay = () => document.getElementById('display').textContent = current;
+
+function inputNum(n) {
+  if (fresh) { current = n; fresh = false; }
+  else current = current === '0' ? n : current + n;
+  updateDisplay();
+}
+
+function inputDot() {
+  if (!current.includes('.')) current += '.';
+  updateDisplay();
+}
+
+function clearDisplay() {
+  current = '0'; previous = null; operator = null;
+  updateDisplay();
+}
+
+function toggleSign() {
+  current = String(-parseFloat(current));
+  updateDisplay();
+}
+
+function inputPercent() {
+  current = String(parseFloat(current) / 100);
+  updateDisplay();
+}
+
+function setOp(op) {
+  previous = parseFloat(current);
+  operator = op;
+  fresh = true;
+}
+
+function calculate() {
+  if (operator === null || previous === null) return;
+  const cur = parseFloat(current);
+  const results = {
+    '+': previous + cur,
+    '-': previous - cur,
+    '*': previous * cur,
+    '/': previous / cur
+  };
+  current = String(results[operator]);
+  operator = null; previous = null; fresh = true;
+  updateDisplay();
+}
+
+// ── Age Calculator ─────────────────────────
+const MONTHS = ["January","February","March","April","May","June",
+                "July","August","September","October","November","December"];
+
+function calcAge() {
+  const dobVal = document.getElementById('dob').value;
+  const ageAtVal = document.getElementById('ageAt').value;
+  const errorEl = document.getElementById('age-error');
+  const resultEl = document.getElementById('age-result');
+
+  errorEl.classList.add('hidden');
+  resultEl.classList.add('hidden');
+
+  if (!dobVal) { showAgeError('Please enter your date of birth.'); return; }
+
+  const dob = new Date(dobVal);
+  const ref = ageAtVal ? new Date(ageAtVal) : new Date();
+
+  if (dob > ref) { showAgeError('Date of birth cannot be in the future.'); return; }
+
+  let years = ref.getFullYear() - dob.getFullYear();
+  let mDiff = ref.getMonth() - dob.getMonth();
+  let dDiff = ref.getDate() - dob.getDate();
+
+  if (dDiff < 0) { mDiff--; const pm = new Date(ref.getFullYear(), ref.getMonth(), 0); dDiff += pm.getDate(); }
+  if (mDiff < 0) { years--; mDiff += 12; }
+
+  const msPerDay = 86400000;
+  const totalDays = Math.floor((ref - dob) / msPerDay);
+
+  document.getElementById('mainAge').textContent =
+    `${years} year${years!==1?'s':''}, ${mDiff} month${mDiff!==1?'s':''}, ${dDiff} day${dDiff!==1?'s':''}`;
+  document.getElementById('totMonths').textContent = (years * 12 + mDiff).toLocaleString();
+  document.getElementById('totWeeks').textContent = Math.floor(totalDays / 7).toLocaleString();
+  document.getElementById('totDays').textContent = totalDays.toLocaleString();
+  document.getElementById('totHours').textContent = (totalDays * 24).toLocaleString();
+
+  const next = new Date(ref.getFullYear(), dob.getMonth(), dob.getDate());
+  if (next <= ref) next.setFullYear(ref.getFullYear() + 1);
+  const daysLeft = Math.ceil((next - ref) / msPerDay);
+
+  document.getElementById('nextBday').textContent =
+    `${MONTHS[next.getMonth()]} ${next.getDate()}, ${next.getFullYear()}`;
+  document.getElementById('daysLeft').textContent =
+    daysLeft === 0 ? '🎉 Today!' : `${daysLeft} days away`;
+
+  resultEl.classList.remove('hidden');
+}
+
+function showAgeError(msg) {
+  const el = document.getElementById('age-error');
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
