@@ -1,4 +1,4 @@
-// ── Tab Switching ──────────────────────────
+
 function switchTab(tab) {
   document.getElementById('calc').classList.toggle('hidden', tab !== 'calc');
   document.getElementById('age').classList.toggle('hidden', tab !== 'age');
